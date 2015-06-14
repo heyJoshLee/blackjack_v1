@@ -1,8 +1,8 @@
 require 'Pry'
 
 
-player_hand = {cards: [], total: 0}
-dealer_hand = {cards: [], total: 0}
+player_hand = {cards: [], total: 0, name: "Player"}
+dealer_hand = {cards: [], total: 0, name: "Dealer"}
 
 # Add cards to deck
 def make_deck
@@ -47,18 +47,19 @@ end
 deck = make_deck
 
 
-def deal_player_card(deck, player_hand)
+def deal_card(deck, hand)
   if deck.length > 0
-    player_hand[:cards] << deck.shift
-    new_card = player_hand[:cards].last
-    puts "Player draws a #{new_card[:face]} of #{new_card[:suit]}"
-    player_hand[:total] += new_card[:value]
+    hand[:cards] << deck.shift
+    new_card = hand[:cards].last
+    puts "#{hand[:name]} draws a #{new_card[:face]} of #{new_card[:suit]}"
+    hand[:total] += new_card[:value]
   else
     deck = make_deck
-    deal_player_card(player_hand)
+    deal_player_card(hand)
   end
 end
 
+=begin
 def deal_dealer_card(deck, dealer_hand)
   if deck.length > 0
     dealer_hand[:cards] << deck.shift
@@ -67,11 +68,12 @@ def deal_dealer_card(deck, dealer_hand)
     dealer_hand[:total] += new_card[:value]
   end
 end
+=end
 
 def initial_deal(deck, player_hand, dealer_hand)
   2.times do
-    deal_player_card(deck, player_hand)
-    deal_dealer_card(deck, dealer_hand)
+    deal_card(deck, player_hand)
+    deal_card(deck, dealer_hand)
   end
   draw_table(player_hand, dealer_hand)
 end
