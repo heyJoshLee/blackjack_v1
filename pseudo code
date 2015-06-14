@@ -1,0 +1,42 @@
+create a deck of cards
+
+shuffle the cards
+
+deal card to player
+  remove card form deck
+deal card to dealer
+  remove card from deck
+deal card to player
+  remove card from deck
+
+
+figure dealer total
+show deal total
+  check if 21
+    dealer wins
+figure user total
+show user total
+  check if 21
+    user wins
+
+ask user if he wants to hit
+  if yes
+    add card
+    figure total
+    show total
+  again?
+  else go to dealer
+
+if dealer < 17 
+  hit
+  again?
+else finished
+
+calculate totals
+who wins
+
+play again?
+  if yes 
+    deal
+  elsif 
+    quit
