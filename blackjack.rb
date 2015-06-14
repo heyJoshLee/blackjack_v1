@@ -3,6 +3,9 @@ require 'Pry'
 
 player_hand = {cards: [], total: 0, name: "Player"}
 dealer_hand = {cards: [], total: 0, name: "Dealer"}
+end_game = false
+
+
 
 # Add cards to deck
 def make_deck
@@ -61,6 +64,7 @@ def deal_card(deck, hand)
         hand[:total] -= 10
         end
       end
+      bust?(hand)
     end
 
   else
@@ -69,10 +73,10 @@ def deal_card(deck, hand)
   end
 end
 
-def bust(hand)
-  if true #hand[:total] > 21
+def bust?(hand)
+  if  hand[:total] > 21
     puts "#{hand[:name]} busts!"
-     return true
+     end_game = true
   end
 end
 
@@ -84,7 +88,7 @@ def initial_deal(deck, player_hand, dealer_hand)
   draw_table(player_hand, dealer_hand)
 end
 
-def ask_to_draw(deck, player_hand)
+def ask_to_draw(deck, player_hand, dealer_hand)
   begin
     puts "Do you want to draw a card? (Y/N)"
     input = gets.chomp.downcase
@@ -92,23 +96,57 @@ def ask_to_draw(deck, player_hand)
 
   if input == "y"
     deal_card(deck, player_hand)
+    draw_table(player_hand, dealer_hand)
+
+    if player_hand[:total] < 21
+    ask_to_draw(deck, player_hand, dealer_hand)
+    end
+
   else
     puts "Pass to dealer"
   end
 
 end
 
+def dealer_turn(deck, dealer_hand, player_hand)
+  while dealer_hand[:total] <= 16
+    deal_card(deck, dealer_hand)
+    draw_table(player_hand, dealer_hand)
+  end
+end
+
+def end_text(player_hand, dealer_hand)
+    puts "Player has: #{player_hand[:total]}"
+    puts "Dealer has: #{dealer_hand[:total]}"
+end
+
+def who_is_winner(player_hand, dealer_hand)
+  if player_hand[:total] == dealer_hand[:total]
+    end_text(player_hand, dealer_hand)
+    puts "Push"
+  elsif player_hand[:total] > dealer_hand[:total]
+    end_text(player_hand, dealer_hand)
+    puts "Player wins!"
+  elsif dealer_hand[:total] > player_hand[:total]
+    end_text(player_hand, dealer_hand)
+    puts "Dealer wins. :( "
+  end
+end
+
+
 initial_deal(deck, player_hand, dealer_hand)
 
-end_game = false
 
 # binding.pry
 
 begin
-  ask_to_draw(deck, player_hand)
-  draw_table(player_hand, dealer_hand)
+  ask_to_draw(deck, player_hand, dealer_hand)
 
-end until bust(player_hand)
+  dealer_turn(deck, dealer_hand, player_hand)
+
+  
+
+end until end_game
 
 
 
