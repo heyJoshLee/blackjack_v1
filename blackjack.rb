@@ -1,8 +1,8 @@
 require 'Pry'
 
 
-player_hand = []
-dealer_hand = []
+player_hand = {cards: [], total: 0}
+dealer_hand = {cards: [], total: 0}
 
 # Add cards to deck
 def make_deck
@@ -28,15 +28,17 @@ end
 def draw_table(player_hand, dealer_hand)
   system "clear"
   puts "--------Dealer--------\n\n"
-  dealer_hand.each do |card|
+  dealer_hand[:cards].each do |card|
     print "#{card[:face]}\s\s"
   end
+  print "\s\s\sTotal => #{dealer_hand[:total]}"
   puts "\n"
 
-  puts "--------Player--------"
-  player_hand.each do |card|
+  puts "--------Player--------\n\n"
+  player_hand[:cards].each do |card|
     print "#{card[:face]}\s\s"
   end
+  print "\s\s\sTotal => #{player_hand[:total]}"
   puts "\n"
 
 end
@@ -47,9 +49,10 @@ deck = make_deck
 
 def deal_player_card(deck, player_hand)
   if deck.length > 0
-    player_hand << deck.shift
-    new_card = player_hand.last
+    player_hand[:cards] << deck.shift
+    new_card = player_hand[:cards].last
     puts "Player draws a #{new_card[:face]} of #{new_card[:suit]}"
+    player_hand[:total] += new_card[:value]
   else
     deck = make_deck
     deal_player_card(player_hand)
@@ -58,21 +61,22 @@ end
 
 def deal_dealer_card(deck, dealer_hand)
   if deck.length > 0
-    dealer_hand << deck.shift
-    new_card = dealer_hand.last
+    dealer_hand[:cards] << deck.shift
+    new_card = dealer_hand[:cards].last
     puts "Dealer draws a #{new_card[:face]} of #{new_card[:suit]}"
+    dealer_hand[:total] += new_card[:value]
   end
 end
 
 def initial_deal(deck, player_hand, dealer_hand)
   2.times do
-    draw_table(player_hand, dealer_hand)
     deal_player_card(deck, player_hand)
-    draw_table(player_hand, dealer_hand)
     deal_dealer_card(deck, dealer_hand)
-    draw_table(player_hand, dealer_hand)
   end
+  draw_table(player_hand, dealer_hand)
 end
+
+ 
 
 initial_deal(deck, player_hand, dealer_hand)
 
