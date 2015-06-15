@@ -61,6 +61,7 @@ def deal_card(deck, hand)
     if hand[:total] > 21 
       hand[:cards].each do |card|
         if card[:face] == "A"
+          card[:face] = "A "
         hand[:total] -= 10
         end
       end
@@ -81,6 +82,9 @@ def bust?(hand)
 end
 
 def initial_deal(deck, player_hand, dealer_hand)
+  player_hand = {cards: [], total: 0, name: "Player"}
+  dealer_hand = {cards: [], total: 0, name: "Dealer"}
+
   2.times do
     deal_card(deck, player_hand)
     deal_card(deck, dealer_hand)
@@ -136,18 +140,16 @@ def who_is_winner(player_hand, dealer_hand, end_hand)
 end
 
 
-initial_deal(deck, player_hand, dealer_hand)
 
-
-# binding.pry
 
 begin
   end_hand = false
+  initial_deal(deck, player_hand, dealer_hand)
+
 
   ask_to_draw(deck, player_hand, dealer_hand)
 
   dealer_turn(deck, dealer_hand, player_hand)
-  binding.pry
 
   who_is_winner(player_hand, dealer_hand, end_hand) 
 
@@ -166,6 +168,7 @@ end until end_game
 
 # TO DO: Fix busting
 # TO DO: Fic Ace issue
+# TO DO: Fix ask_to_draw_function maybe using a while loop instead of calling the function again
 
 
 
