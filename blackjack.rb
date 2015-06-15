@@ -76,7 +76,7 @@ end
 def bust?(hand)
   if  hand[:total] > 21
     puts "#{hand[:name]} busts!"
-     end_game = true
+     end_hand = true
   end
 end
 
@@ -120,16 +120,18 @@ def end_text(player_hand, dealer_hand)
     puts "Dealer has: #{dealer_hand[:total]}"
 end
 
-def who_is_winner(player_hand, dealer_hand)
-  if player_hand[:total] == dealer_hand[:total]
-    end_text(player_hand, dealer_hand)
-    puts "Push"
-  elsif player_hand[:total] > dealer_hand[:total]
-    end_text(player_hand, dealer_hand)
-    puts "Player wins!"
-  elsif dealer_hand[:total] > player_hand[:total]
-    end_text(player_hand, dealer_hand)
-    puts "Dealer wins. :( "
+def who_is_winner(player_hand, dealer_hand, end_hand)
+  unless end_hand
+    if player_hand[:total] == dealer_hand[:total]
+      end_text(player_hand, dealer_hand)
+      puts "Push"
+    elsif player_hand[:total] > dealer_hand[:total]
+      end_text(player_hand, dealer_hand)
+      puts "Player wins!"
+    elsif dealer_hand[:total] > player_hand[:total]
+      end_text(player_hand, dealer_hand)
+      puts "Dealer wins. :( "
+    end
   end
 end
 
@@ -140,16 +142,30 @@ initial_deal(deck, player_hand, dealer_hand)
 # binding.pry
 
 begin
+  end_hand = false
+
   ask_to_draw(deck, player_hand, dealer_hand)
 
   dealer_turn(deck, dealer_hand, player_hand)
+  binding.pry
 
-  
+  who_is_winner(player_hand, dealer_hand, end_hand) 
+
+  begin
+    puts "Would you like to play again? (Y/N)"
+    input = gets.chomp.downcase
+  end until input == "y" || input == "n"
+
+  if input == "n"
+    end_game = true
+  end
+
 
 end until end_game
 
 
-
+# TO DO: Fix busting
+# TO DO: Fic Ace issue
 
 
 
